@@ -3,42 +3,36 @@
 '''
 two view reduce V
 '''
-
+import sklearn.metrics as skm
 import numpy as np
-#import pandas as pd
 import datetime
-# Initialize data.
+from sklearn.model_selection import train_test_split
 
-rho = 1000.0/2
+# Initialize data.
+rho = 100.0/2
+lamda = 10.0
+
 alfa_1 = 1.0
 alfa_2 = 1.0
-lamda = 0.1
-corpus = 13052#1500
-cont_feature = 5297#103
-com_feature = 5039#1437
-labels = 8
-beta = 2.0
-test_data = 3263#917
-train_data = 13052
-data_long = 16315
-V_k = 3000
-data_5fold = [data_long/5,data_long/5*2,data_long/5*3,data_long/5*4,data_long]
+
+corpus = 15000#1500
+cont_feature = 5363#103
+com_feature = 4268#1437
+labels = 5
+V_k = 4000
 
 loadbegin_time = datetime.datetime.now()
-data = np.loadtxt("/home/17-wb/wb/mvml/python/data/twoview_sample_com3_cont4_data.csv",delimiter=',')
-Y_train = data[0:data_5fold[3],0:8]
-X_cont_train = data[0:data_5fold[3],8:5305]
-X_com_train = data[0:data_5fold[3],5305:10344]
-Y_test = data[data_5fold[3]:data_long,0:8]
-X_cont_test = data[data_5fold[3]:data_long,8:5305]
-X_com_test =data[data_5fold[3]:data_long,5305:10344]
-X1 = np.mat(X_cont_train)
-X2 = np.mat(X_com_train)
-Y = np.mat(Y_train)
-cont = np.mat(X_cont_test)
-com = np.mat(X_com_test)
-te_true_label = np.mat(Y_test)
-tr_true_label = Y
+path = '/home/17-wb/wb/mvml/reutersdata/dataset/'
+data = np.mat(np.loadtxt(path+'train/train.csv',delimiter=','))
+X1 = data[:,0:cont_feature]
+X2 = data[:,cont_feature:cont_feature+com_feature]
+Y = data[:,cont_feature+com_feature:5+cont_feature+com_feature]
+#X_train, x_test, Y, y_ = train_test_split(X, Y_data, test_size=0.2)
+corpus = X1.shape[0]
+print corpus
+cont = np.mat(np.loadtxt(path+'val/val_cont.csv',delimiter=','))
+com = np.mat(np.loadtxt(path+'val/val_title.csv',delimiter=','))
+te_true_label = np.mat(np.loadtxt(path+'val/val_y.csv',delimiter=','))
 
 
 A1 = np.mat(np.random.randn(V_k,cont_feature))
